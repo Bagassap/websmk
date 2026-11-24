@@ -1,0 +1,9 @@
+<%- include('partials/head') %>
+<section class="page-head"><div class="wrap"><p class="eyebrow">Dokumentasi</p><h1>Galeri Kegiatan</h1></div></section>
+<section class="section"><div class="wrap">
+  <div class="gallery">
+    <% items.forEach((m) => { %><a href="/uploads/<%= m.path %>"><img src="/uploads/<%= m.path %>" alt="<%= m.alt || m.title %>" loading="lazy"></a><% }) %>
+  </div>
+  <%- include('partials/pager', { query: {} }) %>
+</div></section>
+<%- include('partials/foot') %>

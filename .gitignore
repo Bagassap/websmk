@@ -1,0 +1,9 @@
+node_modules/
+.next/
+.env
+data/
+storage/
+ADMIN-AWAL.txt
+*.WordPress.*.xml
+*.sql.gz
+uploads.zip

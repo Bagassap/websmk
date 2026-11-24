@@ -1,0 +1,10 @@
+<article class="card">
+  <a class="card-img" href="/berita/<%= p.slug %>" tabindex="-1" aria-hidden="true">
+    <% if (p.image) { %><img src="/uploads/<%= p.image %>" alt="" loading="lazy"><% } %>
+  </a>
+  <div class="card-body">
+    <time datetime="<%= new Date(p.published_at).toISOString() %>"><%= fmtDate(p.published_at) %></time>
+    <h3><a href="/berita/<%= p.slug %>"><%= p.title %></a></h3>
+    <p><%= p.excerpt %></p>
+  </div>
+</article>

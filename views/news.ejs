@@ -1,0 +1,18 @@
+<%- include('partials/head') %>
+<section class="page-head"><div class="wrap">
+  <p class="eyebrow">Info Terkini</p>
+  <h1>Berita Sekolah</h1>
+  <form class="search" action="/berita" role="search">
+    <label class="sr" for="q">Cari berita</label>
+    <input id="q" name="q" value="<%= search %>" placeholder="Cari berita...">
+    <button class="btn btn-gold">Cari</button>
+  </form>
+</div></section>
+<section class="section"><div class="wrap">
+  <% if (search) { %><p class="muted"><%= total %> hasil untuk "<%= search %>". <a href="/berita">Tampilkan semua</a></p><% } %>
+  <% if (posts.length) { %>
+    <div class="grid"><% posts.forEach((p) => { %><%- include('partials/card', { p }) %><% }) %></div>
+  <% } else { %><p>Belum ada berita yang cocok.</p><% } %>
+  <%- include('partials/pager', { query: { ...(search ? { q: search } : {}), ...(kategori ? { kategori } : {}) } }) %>
+</div></section>
+<%- include('partials/foot') %>

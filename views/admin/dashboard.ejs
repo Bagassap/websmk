@@ -1,0 +1,83 @@
+<%- include('_head', { title: 'Dashboard' }) %>
+<%
+  const now = new Date();
+  const hour = Number(new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Asia/Jakarta' }).format(now));
+  const greeting = hour < 11 ? 'Selamat Pagi' : hour < 15 ? 'Selamat Siang' : hour < 18 ? 'Selamat Sore' : 'Selamat Malam';
+  const today = new Intl.DateTimeFormat('id-ID', { dateStyle: 'full', timeZone: 'Asia/Jakarta' }).format(now);
+  const name = user.name || 'Admin';
+  const num = (n) => Number(n || 0).toLocaleString('id-ID');
+  const statusName = { publish: 'Tayang', draft: 'Draf', trash: 'Sampah' };
+  const maxBar = Math.max(1, ...months.map((m) => m.n));
+  const monthName = (k) => new Intl.DateTimeFormat('id-ID', { month: 'short', timeZone: 'UTC' }).format(new Date(`${k}-01T00:00:00Z`));
+  const cards = [
+    ['/admin/berita', 'news', stats.posts, 'Berita Tayang', 'Kelola semua berita'],
+    ['/admin/halaman', 'file', stats.pages, 'Halaman', 'Profil, jurusan, fasilitas'],
+    ['/admin/media', 'image', stats.media, 'File Media', `${num(stats.gallery)} tampil di galeri`],
+    ['/admin/guru', 'users', stats.staff, 'Guru dan Staff', 'Data tenaga pendidik'],
+  ];
+  const quick = [
+    ['/admin/berita/baru', 'plus', 'Tulis Berita', 'green'],
+    ['/admin/media', 'image', 'Unggah Foto', 'blue'],
+    ['/admin/guru', 'users', 'Data Guru', 'bright'],
+    ['/admin/pengaturan', 'settings', 'Pengaturan', 'dark'],
+  ];
+%>
+<header class="dash-head">
+  <div class="dash-user">
+    <span class="dash-avatar" aria-hidden="true"><%= name.charAt(0).toUpperCase() %></span>
+    <div><h1><%= greeting %>, <%= name %></h1><p><%= today %></p></div>
+    <a class="head-btn" href="/admin" aria-label="Muat ulang"><%- include('_icon', { n: 'refresh' }) %></a>
+  </div>
+  <div class="dash-banner">
+    <a href="/admin/berita?status=draft"><%- include('_icon', { n: 'edit' }) %><b><%= num(stats.drafts) %></b><span>Draf</span></a>
+    <a href="/admin/berita?status=trash"><%- include('_icon', { n: 'trash' }) %><b><%= num(stats.trash) %></b><span>Sampah</span></a>
+    <a href="/admin/media"><%- include('_icon', { n: 'image' }) %><b><%= num(stats.gallery) %></b><span>Galeri</span></a>
+    <a href="/admin/berita"><%- include('_icon', { n: 'eye' }) %><b><%= num(stats.views) %></b><span>Dibaca</span></a>
+  </div>
+</header>
+
+<div class="dash-grid">
+  <section class="dash-stats">
+    <div class="sec-title"><h2>Statistik Website</h2><span class="live"><i></i>Terbaru</span></div>
+    <div class="tiles">
+      <% cards.forEach(([href, icon, value, label, sub]) => { %>
+      <a href="<%= href %>">
+        <span class="tile-top"><span class="tile-ico"><%- include('_icon', { n: icon }) %></span><span class="tile-go"><%- include('_icon', { n: 'chevron' }) %></span></span>
+        <strong><%= num(value) %></strong><span class="tile-label"><%= label %></span><small><%= sub %></small>
+      </a>
+      <% }) %>
+    </div>
+  </section>
+
+  <section class="chart-card">
+    <div class="chart-head"><div><h2>Berita 7 Bulan</h2><strong><%= num(months.reduce((a, m) => a + m.n, 0)) %></strong></div><span class="pill">Per bulan</span></div>
+    <svg class="chart" viewBox="0 0 700 190" role="img" aria-label="Jumlah berita per bulan: <%= months.map((m) => `${monthName(m.key)} ${m.n}`).join(', ') %>">
+      <% months.forEach((m, i) => { const h = m.n ? Math.max(8, Math.round((m.n / maxBar) * 130)) : 3; const x = 22 + i * 96; const last = i === months.length - 1; %>
+      <rect class="<%= last ? 'bar-now' : 'bar-old' %>" x="<%= x %>" y="<%= 152 - h %>" width="60" height="<%= h %>" rx="7"></rect>
+      <text class="bar-num" x="<%= x + 30 %>" y="<%= 142 - h %>"><%= m.n %></text>
+      <text class="bar-day <%= last ? 'now' : '' %>" x="<%= x + 30 %>" y="178"><%= monthName(m.key) %></text>
+      <% }) %>
+    </svg>
+  </section>
+</div>
+
+<section>
+  <div class="sec-title"><h2>Menu Cepat</h2></div>
+  <div class="quick">
+    <% quick.forEach(([href, icon, label, color]) => { %><a class="q-<%= color %>" href="<%= href %>"><span><%- include('_icon', { n: icon }) %></span><b><%= label %></b></a><% }) %>
+  </div>
+</section>
+
+<section>
+  <div class="sec-title"><h2>Terakhir Diperbarui</h2><a class="sec-link" href="/admin/berita">Lihat semua</a></div>
+  <div class="recent">
+    <% recent.forEach((r) => { %>
+    <a href="/admin/berita/<%= r.id %>">
+      <span class="dot <%= r.status %>"></span>
+      <span class="recent-title"><b><%= r.title %></b><small><%= fmt(r.updated_at) %></small></span>
+      <span class="tag <%= r.status %>"><%= statusName[r.status] || r.status %></span>
+    </a>
+    <% }) %>
+  </div>
+</section>
+<%- include('_foot') %>

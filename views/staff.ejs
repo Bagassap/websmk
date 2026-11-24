@@ -1,0 +1,11 @@
+<%- include('partials/head') %>
+<section class="page-head"><div class="wrap"><p class="eyebrow">Tenaga Pendidik dan Kependidikan</p><h1>Guru dan Staff</h1></div></section>
+<section class="section"><div class="wrap staff-grid">
+  <% staff.forEach((s) => { %>
+  <figure class="person">
+    <span class="person-img"><% if (s.photo) { %><img src="<%= s.photo %>" alt="Foto <%= s.name %>" loading="lazy"><% } %></span>
+    <figcaption><strong><%= s.name %></strong><span><%= s.role %></span></figcaption>
+  </figure>
+  <% }) %>
+</div></section>
+<%- include('partials/foot') %>

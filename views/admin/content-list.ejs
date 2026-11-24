@@ -1,0 +1,26 @@
+<%- include('_head', { title: label }) %>
+<div class="bar"><h1><%= label %> (<%= total %>)</h1><a class="btn" href="/admin/<%= kind %>/baru">Tambah <%= label %></a></div>
+<form class="filters">
+  <input name="q" value="<%= search %>" placeholder="Cari judul..." aria-label="Cari judul">
+  <select name="status" aria-label="Status">
+    <option value="">Semua</option>
+    <% [['publish','Tayang'],['draft','Draf'],['trash','Sampah']].forEach(([v,l]) => { %><option value="<%= v %>" <%= status === v ? 'selected' : '' %>><%= l %></option><% }) %>
+  </select>
+  <button class="btn soft">Terapkan</button>
+</form>
+<div class="table"><table>
+  <thead><tr><th>Judul</th><th>Status</th><th>Tanggal</th><th>Dibaca</th><th></th></tr></thead>
+  <tbody>
+  <% rows.forEach((r) => { %>
+    <tr>
+      <td><a href="/admin/<%= kind %>/<%= r.id %>"><%= r.title %></a></td>
+      <td><span class="tag <%= r.status %>"><%= ({ publish: 'Tayang', draft: 'Draf', trash: 'Sampah' })[r.status] || r.status %></span></td>
+      <td><%= fmt(r.published_at) %></td>
+      <td><%= r.views %></td>
+      <td><% if (r.status !== 'trash') { %><form method="post" action="/admin/<%= kind %>/<%= r.id %>/trash" data-confirm="Pindahkan ke Sampah?"><input type="hidden" name="_csrf" value="<%= csrf %>"><button class="linkish danger">Sampah</button></form><% } %></td>
+    </tr>
+  <% }) %>
+  </tbody>
+</table></div>
+<%- include('_pager', { query: { ...(search ? { q: search } : {}), ...(status ? { status } : {}) } }) %>
+<%- include('_foot') %>

@@ -1,0 +1,13 @@
+<%- include('_head', { title: 'Masuk' }) %>
+<main class="login">
+  <form method="post" action="/admin/login" class="panel">
+    <img class="login-logo" src="/logo-smk.png" alt="SMK Ma'arif NU 01 Limpung" width="843" height="174">
+    <div><h1>Masuk Admin</h1><p class="login-sub">Kelola berita, halaman, dan data sekolah.</p></div>
+    <% if (error) { %><p class="error" role="alert"><%= error %></p><% } %>
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <label>Username<input name="username" autocomplete="username" required autofocus></label>
+    <label>Password<input type="password" name="password" autocomplete="current-password" required></label>
+    <button class="btn">Masuk</button>
+  </form>
+</main>
+<%- include('_foot') %>

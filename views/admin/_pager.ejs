@@ -1,0 +1,3 @@
+<% if (pages > 1) { const link = (n) => { const u = new URLSearchParams(query); u.set('halaman', n); return `?${u}`; }; %>
+<nav class="pager"><% if (page > 1) { %><a href="<%= link(page - 1) %>">Sebelumnya</a><% } %><span><%= page %> / <%= pages %></span><% if (page < pages) { %><a href="<%= link(page + 1) %>">Berikutnya</a><% } %></nav>
+<% } %>

@@ -1,0 +1,33 @@
+{
+  "name": "web-smk-limpung",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Website SMK Ma'arif NU 01 Limpung (Node.js + PostgreSQL)",
+  "main": "src/server.js",
+  "engines": { "node": ">=20.12" },
+  "scripts": {
+    "setup": "node scripts/db.js init && node scripts/migrate.js && node scripts/import-wxr.js && node scripts/verify-import.js",
+    "db:start": "node scripts/db.js start",
+    "db:stop": "node scripts/db.js stop",
+    "migrate": "node scripts/migrate.js",
+    "import": "node scripts/import-wxr.js",
+    "verify": "node scripts/verify-import.js",
+    "media:check": "node scripts/media-check.js",
+    "build": "npm --prefix web run build",
+    "start": "node scripts/run.js start",
+    "dev": "node scripts/run.js dev",
+    "admin": "node src/server.js"
+  },
+  "dependencies": {
+    "connect-pg-simple": "^10.0.0",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "fast-xml-parser": "^4.5.1",
+    "he": "^1.2.0",
+    "helmet": "^8.0.0",
+    "multer": "^2.0.2",
+    "pg": "^8.13.1",
+    "sanitize-html": "^2.14.0"
+  }
+}

@@ -1,0 +1,25 @@
+</main>
+<footer class="footer"><div class="wrap footer-grid">
+  <div>
+    <h2><%= site.site_name %></h2>
+    <p><%= site.tagline %></p>
+    <p><%= site.address %></p>
+  </div>
+  <div>
+    <h3>Hubungi Kami</h3>
+    <p><a href="<%= waLink %>" target="_blank" rel="noopener">WhatsApp <%= site.whatsapp %></a></p>
+    <p><a href="mailto:<%= site.email %>"><%= site.email %></a></p>
+    <p><%= site.hours %></p>
+  </div>
+  <div>
+    <h3>Tautan</h3>
+    <p><a href="/berita">Berita</a></p>
+    <p><a href="/fasilitas">Fasilitas</a></p>
+    <p><a href="/guru-dan-staff">Guru dan Staff</a></p>
+    <p><a href="<%= site.spmb_url %>" target="_blank" rel="noopener">Pendaftaran SPMB</a></p>
+  </div>
+</div>
+<div class="wrap copyright">© <%= new Date().getFullYear() %> <%= site.site_name %></div>
+</footer>
+</body>
+</html>

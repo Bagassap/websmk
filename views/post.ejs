@@ -1,0 +1,15 @@
+<%- include('partials/head') %>
+<article class="article wrap-narrow">
+  <nav class="crumbs" aria-label="Lokasi"><a href="/">Beranda</a> / <a href="/berita">Berita</a></nav>
+  <h1><%= post.title %></h1>
+  <p class="muted"><time datetime="<%= new Date(post.published_at).toISOString() %>"><%= fmtDate(post.published_at) %></time> · Dibaca <%= post.views.toLocaleString('id-ID') %> kali</p>
+  <% if (post.image) { %><img class="article-img" src="/uploads/<%= post.image %>" alt="<%= post.image_alt || post.title %>"><% } %>
+  <div class="prose"><%- post.content_html %></div>
+</article>
+<% if (related.length) { %>
+<section class="section tint"><div class="wrap">
+  <h2>Berita lainnya</h2>
+  <div class="grid"><% related.forEach((p) => { %><%- include('partials/card', { p }) %><% }) %></div>
+</div></section>
+<% } %>
+<%- include('partials/foot') %>

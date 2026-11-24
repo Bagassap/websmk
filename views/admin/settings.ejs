@@ -1,0 +1,12 @@
+<%- include('_head', { title: 'Pengaturan' }) %>
+<div class="bar"><h1>Pengaturan Website</h1></div>
+<form method="post" class="panel narrow">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <% fields.forEach(([k, l]) => { %>
+    <label><%= l %>
+      <% if (k.endsWith('_text')) { %><textarea name="<%= k %>" rows="3"><%= values[k] %></textarea><% } else { %><input name="<%= k %>" value="<%= values[k] %>"><% } %>
+    </label>
+  <% }) %>
+  <button class="btn">Simpan</button>
+</form>
+<%- include('_foot') %>

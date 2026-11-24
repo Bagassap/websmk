@@ -1,0 +1,23 @@
+<%- include('_head', { title: 'Media' }) %>
+<div class="bar"><h1>Media (<%= total %> gambar)</h1></div>
+<form method="post" action="/admin/media/upload" enctype="multipart/form-data" class="panel upload">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <label>Gambar (maks. 8 MB)<input type="file" name="file" accept="image/jpeg,image/png,image/webp,image/gif" required></label>
+  <label>Judul<input name="title"></label>
+  <label class="check"><input type="checkbox" name="in_gallery" checked> Tampilkan di Galeri</label>
+  <button class="btn">Unggah</button>
+</form>
+<div class="media-grid">
+  <% rows.forEach((m) => { %>
+  <figure>
+    <img src="/uploads/<%= m.path %>" alt="<%= m.alt || m.title %>" loading="lazy">
+    <figcaption><%= m.title %></figcaption>
+    <form method="post" action="/admin/media/<%= m.id %>/gallery">
+      <input type="hidden" name="_csrf" value="<%= csrf %>"><input type="hidden" name="halaman" value="<%= page %>">
+      <button class="linkish"><%= m.in_gallery ? 'Keluarkan dari Galeri' : 'Masukkan ke Galeri' %></button>
+    </form>
+  </figure>
+  <% }) %>
+</div>
+<%- include('_pager', { query: {} }) %>
+<%- include('_foot') %>

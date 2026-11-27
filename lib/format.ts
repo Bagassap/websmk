@@ -13,3 +13,9 @@ export const fixContentLinks = (html: unknown) => String(html || '')
   .replace(/href="\/?\?page_id=2162"/g, 'href="/business-center"')
   .replace(/href="\?/g, 'href="/?');
 export const textParam = (v: Param, max = 100) => String(first(v) || '').trim().slice(0, max);
+
+/** Gambar pratinjau share (WhatsApp, Facebook): selalu JPEG 1200x630 dari route /og. */
+export const ogImage = (src?: string | null, alt = '') => {
+  const m = String(src || '').split(/[?#]/)[0].match(/\/uploads\/(.+\.(?:jpe?g|png|webp|gif))$/i);
+  return { url: m ? `/og/${m[1]}` : '/og/default', width: 1200, height: 630, type: 'image/jpeg', alt };
+};

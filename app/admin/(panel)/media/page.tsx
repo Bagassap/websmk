@@ -18,7 +18,7 @@ export default async function MediaPage({ searchParams }: { searchParams: Promis
     <>
       <div className="bar"><h1>Media ({total} gambar)</h1></div>
       <form action={uploadMedia} className="panel upload">
-        <label>Gambar (maks. 8 MB)<input type="file" name="file" accept="image/jpeg,image/png,image/webp,image/gif" required /></label>
+        <label>Gambar (maks. 15 MB, otomatis dikompres ke WebP)<input type="file" name="file" accept="image/jpeg,image/png,image/webp,image/gif" required /></label>
         <label>Judul<input name="title" /></label>
         <label className="check"><input type="checkbox" name="in_gallery" defaultChecked /> Tampilkan di Galeri</label>
         <button className="btn">Unggah</button>

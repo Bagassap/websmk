@@ -8,7 +8,7 @@ import { SocialIcon } from '@/components/Icon';
 import ImageGuard from '@/components/ImageGuard';
 import MotionRoot from '@/components/MotionRoot';
 import { getMenu, getSite } from '@/lib/data';
-import { waLink } from '@/lib/format';
+import { ogImage, waLink } from '@/lib/format';
 import { PROGRAMS, SOCIALS } from '@/lib/school';
 
 export const dynamic = 'force-dynamic';
@@ -21,7 +21,8 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(process.env.SITE_URL || 'http://localhost:3000'),
     title: { default: `${site.site_name} | ${site.tagline}`, template: `%s | ${site.site_name}` },
     description: site.hero_text,
-    openGraph: { siteName: site.site_name, locale: 'id_ID', type: 'website' },
+    openGraph: { siteName: site.site_name, locale: 'id_ID', type: 'website', images: [ogImage(null, site.site_name)] },
+    twitter: { card: 'summary_large_image' },
     alternates: { types: { 'application/rss+xml': '/feed' } },
   };
 }

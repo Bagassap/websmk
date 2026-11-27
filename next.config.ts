@@ -28,7 +28,7 @@ const config: NextConfig = {
     minimumCacheTTL: 2592000,
   },
   // Isi berita dan unggahan gambar dari panel admin bisa lebih dari 1 MB.
-  experimental: { serverActions: { bodySizeLimit: '10mb' } },
+  experimental: { serverActions: { bodySizeLimit: '20mb' } },
   async redirects() {
     return [{ source: '/organisasi', destination: '/ekstrakurikuler', permanent: true }];
   },

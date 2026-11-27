@@ -9,7 +9,7 @@ import Sidebar from '@/components/Sidebar';
 import { parseActivities, parseContact, parseHistory, parseProfile } from '@/lib/about';
 import { getPage, getPostSlug, getSite } from '@/lib/data';
 import { FACILITY_SLUGS, parseFacility, parseFacilityIndex, type FacilityData } from '@/lib/facility';
-import { firstImage, fixContentLinks } from '@/lib/format';
+import { firstImage, fixContentLinks, ogImage } from '@/lib/format';
 import { parseProgram, plain } from '@/lib/program';
 import { FACILITY_PHOTOS, PROGRAMS } from '@/lib/school';
 
@@ -27,11 +27,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const page = await getPage(slug);
   if (!page) return { title: 'Halaman tidak ditemukan' };
+  const siteName = (await getSite()).site_name;
   if (slug === 'business-center') {
     const bc = await businessCenter();
     if (bc) {
       const text = plain(bc.intro);
-      return { title: bc.title, description: text, alternates: { canonical: '/business-center' }, openGraph: { title: bc.title, description: text, images: bc.image ? [bc.image] : [] } };
+      return { title: bc.title, description: text, alternates: { canonical: '/business-center' }, openGraph: { title: bc.title, description: text, url: '/business-center', siteName, locale: 'id_ID', images: [ogImage(bc.image, bc.title)] } };
     }
   }
   const image = firstImage(page.content_html);
@@ -40,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: slug === 'contact-us' ? 'Hubungi Kami' : page.seo_title || page.title,
     description,
     alternates: { canonical: `/${page.slug}` },
-    openGraph: { title: page.title, description, images: image ? [image] : [] },
+    openGraph: { title: page.title, description, url: `/${page.slug}`, siteName, locale: 'id_ID', images: [ogImage(image, page.title)] },
   };
 }
 

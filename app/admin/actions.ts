@@ -5,6 +5,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { updateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
+import sharp from 'sharp';
 import { KINDS, SETTING_FIELDS, isStatus, kindOf } from '@/lib/admin';
 import { clearFailures, clientIp, createSession, destroySession, dropOtherSessions, isLimited, recordFailure, requireUser } from '@/lib/auth';
 import { CACHE_TAG } from '@/lib/data';
@@ -16,7 +17,10 @@ import { hashPassword, verifyPassword } from '@/lib/password';
 export type FormState = { error?: string } | null;
 
 const UPLOADS = path.join(process.cwd(), 'storage', 'uploads');
-const MAX_UPLOAD = 8 * 1024 * 1024;
+const MAX_UPLOAD = 15 * 1024 * 1024;
+// Foto dikecilkan sampai sisi terpanjang 1920 px lalu disimpan sebagai WebP.
+const MAX_SIDE = 1920;
+const WEBP_QUALITY = 80;
 const text = (fd: FormData, key: string) => String(fd.get(key) ?? '').trim();
 // Setelah data berubah, cache halaman website dibuang agar perubahan langsung tampil.
 const refreshSite = () => updateTag(CACHE_TAG);
@@ -141,15 +145,31 @@ async function storeImage(file: FormDataEntryValue | null, title: string, inGall
   const buffer = Buffer.from(await file.arrayBuffer());
   const kind = imageType(buffer);
   if (!kind) return { error: 'gambar-format' };
+  // GIF dibiarkan apa adanya agar animasinya tidak hilang.
+  let data = buffer;
+  let ext = kind[0];
+  let mime = kind[1];
+  if (ext !== 'gif') {
+    try {
+      data = await sharp(buffer, { limitInputPixels: 80_000_000 })
+        .rotate()
+        .resize({ width: MAX_SIDE, height: MAX_SIDE, fit: 'inside', withoutEnlargement: true })
+        .webp({ quality: WEBP_QUALITY, effort: 5 })
+        .toBuffer();
+      [ext, mime] = ['webp', 'image/webp'];
+    } catch {
+      return { error: 'gambar-format' };
+    }
+  }
   const now = new Date();
   const dir = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}`;
   const original = path.parse(file.name).name;
-  const name = `${slugify(original).slice(0, 60)}-${crypto.randomBytes(4).toString('hex')}.${kind[0]}`;
+  const name = `${slugify(original).slice(0, 60)}-${crypto.randomBytes(4).toString('hex')}.${ext}`;
   await fs.promises.mkdir(path.join(UPLOADS, dir), { recursive: true });
-  await fs.promises.writeFile(path.join(UPLOADS, dir, name), buffer, { flag: 'wx' });
+  await fs.promises.writeFile(path.join(UPLOADS, dir, name), data, { flag: 'wx' });
   const label = (title || original).slice(0, 200);
   const m = await one<{ id: number; path: string }>('INSERT INTO media (title, alt, path, mime, in_gallery) VALUES ($1,$2,$3,$4,$5) RETURNING id, path',
-    [label, label, `${dir}/${name}`, kind[1], inGallery]);
+    [label, label, `${dir}/${name}`, mime, inGallery]);
   if (inGallery) refreshSite();
   return { id: m!.id, url: `/uploads/${m!.path}` };
 }

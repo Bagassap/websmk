@@ -766,3 +766,17 @@ main{overflow-x:clip}
   .word>span{transform:none}
   .slide .kicker,.slide-text,.slide .actions{opacity:1;translate:none}
 }
+
+/* Tombol bagikan berita */
+.share{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:34px;padding-top:24px;border-top:1px solid var(--line)}
+.share-label{display:inline-flex;align-items:center;gap:8px;margin-right:4px;color:var(--black);font-weight:900}
+.share button{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--text);font:inherit;font-size:.94rem;font-weight:700;cursor:pointer;transition:background .2s,color .2s,border-color .2s,translate .2s}
+.share button:hover{translate:0 -2px;border-color:var(--green);color:var(--green)}
+.share button svg{width:18px;height:18px;flex:none;fill:currentColor}
+.share button svg[class*=lucide]{fill:none}
+.share .share-wa{border-color:#25d366;background:#25d366;color:#fff}
+.share .share-wa:hover{background:#1ebe5b;color:#fff;border-color:#1ebe5b}
+.share .share-fb{border-color:#1877f2;background:#1877f2;color:#fff}
+.share .share-fb:hover{background:#0f66d8;color:#fff;border-color:#0f66d8}
+.share .share-more{width:44px;padding:0;justify-content:center}
+@media (max-width:560px){.share-label{width:100%}.share button{flex:1 1 auto;justify-content:center}.share .share-more{flex:0 0 44px}}

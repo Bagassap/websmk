@@ -6,8 +6,9 @@ import PageHero from '@/components/PageHero';
 import SchoolImage from '@/components/SchoolImage';
 import Sidebar from '@/components/Sidebar';
 import ViewBeacon from '@/components/ViewBeacon';
-import { getPost } from '@/lib/data';
-import { fixContentLinks, fmtDate, isoDate } from '@/lib/format';
+import { getPost, getSite } from '@/lib/data';
+import { firstImage, fixContentLinks, fmtDate, isoDate, ogImage } from '@/lib/format';
+import ShareButtons from '@/components/ShareButtons';
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -16,12 +17,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const data = await getPost(slug);
   if (!data) return { title: 'Halaman tidak ditemukan' };
   const { post } = data;
+  const site = await getSite();
   const description = post.seo_description || post.excerpt;
+  const url = `/berita/${post.slug}`;
   return {
     title: post.seo_title || post.title,
     description,
-    alternates: { canonical: `/berita/${post.slug}` },
-    openGraph: { type: 'article', title: post.title, description, publishedTime: isoDate(post.published_at), images: post.image ? [`/uploads/${post.image}`] : [] },
+    alternates: { canonical: url },
+    openGraph: {
+      type: 'article', url, siteName: site.site_name, locale: 'id_ID', title: post.title, description,
+      publishedTime: isoDate(post.published_at), modifiedTime: isoDate(post.updated_at),
+      images: [ogImage(post.image ? `/uploads/${post.image}` : firstImage(post.content_html), post.image_alt || post.title)],
+    },
   };
 }
 
@@ -42,6 +49,7 @@ export default async function PostPage({ params }: Props) {
         <article className="article">
           {post.image && <div className="article-figure" data-reveal="zoom"><SchoolImage src={`/uploads/${post.image}`} alt={post.image_alt || post.title} sizes="(max-width:1024px) 100vw, 860px" priority /></div>}
           <div className="prose" dangerouslySetInnerHTML={{ __html: fixContentLinks(post.content_html) }} />
+          <ShareButtons path={`/berita/${post.slug}`} title={post.title} />
         </article>
         <Sidebar currentPost={post.slug} />
       </div>

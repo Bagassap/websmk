@@ -87,3 +87,12 @@ CREATE TABLE IF NOT EXISTS settings (
   key TEXT PRIMARY KEY,
   value TEXT NOT NULL DEFAULT ''
 );
+
+-- Sesi login panel admin. Token asli hanya ada di cookie, di sini disimpan hash-nya.
+CREATE TABLE IF NOT EXISTS admin_sessions (
+  token_hash TEXT PRIMARY KEY,
+  user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  expires_at TIMESTAMPTZ NOT NULL
+);
+-- Tabel sesi milik panel admin Express lama.
+DROP TABLE IF EXISTS user_sessions;

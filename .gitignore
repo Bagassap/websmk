@@ -7,3 +7,5 @@ ADMIN-AWAL.txt
 *.WordPress.*.xml
 *.sql.gz
 uploads.zip
+next-env.d.ts
+*.tsbuildinfo
